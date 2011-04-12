@@ -26,7 +26,7 @@ class Stencil(object):
         for resource in self.resources:
             resource.copy(target, self.context)
 
-    def fill_context(self, options):
+    def fill_context(self, options, target):
         for variable in self.variables:
             value = getattr(options, variable.name, None)
             if value is not None:
@@ -63,6 +63,6 @@ class Stencil(object):
         if len(args) != 1:
             parser.error("target isn't specified.")
         target = os.path.abspath(args[0])
-        stencil.fill_context(options)
+        stencil.fill_context(options, target)
         stencil.collect_resources()
         stencil.copy(target)
