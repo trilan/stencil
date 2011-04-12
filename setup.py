@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 setup(
@@ -8,6 +8,7 @@ setup(
     url = 'https://github.org/trilan/stencil',
     author = 'Mike Yumatov',
     author_email = 'mike@yumatov.org',
+    packages = find_packages(),
     entry_points = {
         'console_scripts': [
             'stencil = stencil.main:run',
