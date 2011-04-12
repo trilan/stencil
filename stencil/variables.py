@@ -11,7 +11,7 @@ class Variable(object):
         self.prompt_text = prompt
 
     def is_valid(self, value):
-        return value or default is not None
+        return value or self.default is not None
 
     def prompt(self):
         text = self.prompt_text or self.name.replace('_', ' ').capitalize()
