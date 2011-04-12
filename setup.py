@@ -4,6 +4,7 @@ from setuptools import setup, find_packages
 setup(
     name = 'Stencil',
     version = '0.1.dev',
+    license = 'BSD',
     description = 'Creates files and directories from stencils.',
     url = 'https://github.org/trilan/stencil',
     author = 'Mike Yumatov',
