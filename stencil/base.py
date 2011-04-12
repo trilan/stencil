@@ -22,10 +22,9 @@ class Stencil(object):
         source_path = os.path.join(os.path.dirname(module_path), self.source)
         return os.path.abspath(source_path)
 
-    def copy(self, destination):
-        destination = os.path.abspath(destination)
+    def copy(self, target):
         for resource in self.resources:
-            resource.copy(destination, self.context)
+            resource.copy(target, self.context)
 
     def fill_context(self, options):
         for variable in self.variables:
@@ -62,7 +61,8 @@ class Stencil(object):
         parser = stencil.get_parser()
         options, args = parser.parse_args(args)
         if len(args) != 1:
-            parser.error("destination isn't specified.")
+            parser.error("target isn't specified.")
+        target = os.path.abspath(args[0])
         stencil.fill_context(options)
         stencil.collect_resources()
-        stencil.copy(args[0])
+        stencil.copy(target)

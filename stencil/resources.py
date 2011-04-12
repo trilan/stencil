@@ -12,7 +12,7 @@ class Resource(object):
         self.source = source
         self.path = path
 
-    def destination_path(self, context):
+    def destination(self, context):
         return self.path.format(**context)
 
     def __repr__(self):
@@ -21,9 +21,8 @@ class Resource(object):
 
 class Directory(Resource):
 
-    def copy(self, destination, context):
-        destination_path = self.destination_path(context)
-        destination = os.path.join(destination, destination_path)
+    def copy(self, target, context):
+        destination = os.path.join(target, self.destination(context))
         if os.path.exists(destination):
             if self.path != '.':
                 raise AlreadyExists('directory already exists')
@@ -33,22 +32,20 @@ class Directory(Resource):
 
 class File(Resource):
 
-    def copy(self, destination, context):
-        destination_path = self.destination_path(context)
-        destination = os.path.join(destination, destination_path)
+    def copy(self, target, context):
         source = os.path.join(self.source, self.path)
+        destination = os.path.join(target, self.destination(context))
         copyfile(source, destination)
 
 
 class Template(Resource):
 
-    def destination_path(self, context):
-        return super(Template, self).destination_path(context)[:-5]
+    def destination(self, context):
+        return super(Template, self).destination(context)[:-5]
 
-    def copy(self, destination, context):
-        destination_path = self.destination_path(context)
-        destination = os.path.join(destination, destination_path)
+    def copy(self, target, context):
         source = os.path.join(self.source, self.path)
+        destination = os.path.join(target, self.destination(context))
         with open(source) as f:
             content = f.read()
         with open(destination, 'w') as f:
