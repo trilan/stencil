@@ -43,7 +43,7 @@ class File(Resource):
 class Template(Resource):
 
     def destination_path(self, context):
-        return super(self, Template).destination_path(context)[:-5]
+        return super(Template, self).destination_path(context)[:-5]
 
     def copy(self, destination, context):
         destination_path = self.destination_path(context)
