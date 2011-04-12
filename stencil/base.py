@@ -26,13 +26,16 @@ class Stencil(object):
         for resource in self.resources:
             resource.copy(target, self.context)
 
-    def fill_context(self, options, target):
+    def fill_context(self, options, target, use_defaults=False):
         for variable in self.variables:
             value = getattr(options, variable.name, None)
             if value is not None:
                 self.context[variable.name] = value
             elif variable.name not in self.context:
-                self.context[variable.name] = variable.prompt()
+                if use_defaults and variable.default is not None:
+                    self.context[variable.name] = variable.default
+                else:
+                    self.context[variable.name] = variable.prompt()
 
     def collect_resources(self):
         source_path = self.get_absolute_source_path()
@@ -56,13 +59,13 @@ class Stencil(object):
         return parser
 
     @classmethod
-    def run(cls, args):
+    def run(cls, args, use_defaults=False):
         stencil = cls()
         parser = stencil.get_parser()
         options, args = parser.parse_args(args)
         if len(args) != 1:
             parser.error("target isn't specified.")
         target = os.path.abspath(args[0])
-        stencil.fill_context(options, target)
+        stencil.fill_context(options, target, use_defaults)
         stencil.collect_resources()
         stencil.copy(target)

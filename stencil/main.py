@@ -18,6 +18,9 @@ def run():
     parser = optparse.OptionParser()
     parser.add_option('-l', '--list', action='callback', callback=print_list,
                       help='show available stencils and exit')
+    parser.add_option('-d', '--use-defaults', action='store_true',
+                      dest='use_defaults', default=False,
+                      help="don't ask for variables with defaults if set")
     parser.disable_interspersed_args()
     options, args = parser.parse_args()
     if not args:
@@ -27,7 +30,7 @@ def run():
         stencil = stencils[name]
     except KeyError:
         parser.error("stencil %s wasn't found" % name)
-    stencil.run(args)
+    stencil.run(args, options.use_defaults)
 
 
 if __name__ == '__main__':
