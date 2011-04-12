@@ -10,24 +10,17 @@ class WrongSource(Exception):
 
 class Stencil(object):
 
+    source = None
     variables = []
 
     def __init__(self):
         self.resources = []
         self.context = {}
 
-    @property
-    def name(self):
-        return self.__class__.__name__.lower()
-
-    @property
-    def source(self):
-        return 'stencils/%s' % self.name
-
-    def location(self):
+    def get_absolute_source_path(self):
         module_path = sys.modules[self.__class__.__module__].__file__
-        location = os.path.join(os.path.dirname(module_path), self.source)
-        return os.path.abspath(location)
+        source_path = os.path.join(os.path.dirname(module_path), self.source)
+        return os.path.abspath(source_path)
 
     def copy(self, destination):
         destination = os.path.abspath(destination)
@@ -43,19 +36,19 @@ class Stencil(object):
                 self.context[variable.name] = variable.prompt()
 
     def collect_resources(self):
-        source = self.location()
-        if not os.path.isdir(source):
-            raise WrongSource('%s is not a directory' % source)
+        source_path = self.get_absolute_source_path()
+        if not os.path.isdir(source_path):
+            raise WrongSource('%s is not a directory' % source_path)
         directories, files, templates = [], [], []
-        for root, dirnames, filenames in os.walk(source):
-            path = os.path.relpath(root, source)
-            directories.append(Directory(source, path))
+        for path, dirnames, filenames in os.walk(source_path):
+            path = os.path.relpath(path, source_path)
+            directories.append(Directory(source_path, path))
             for filename in filenames:
                 if filename.endswith('_tmpl'):
                     template_path = os.path.join(path, filename)
-                    templates.append(Template(source, template_path))
+                    templates.append(Template(source_path, template_path))
                 else:
-                    files.append(File(source, os.path.join(path, filename)))
+                    files.append(File(source_path, os.path.join(path, filename)))
         self.resources = directories + files + templates
 
     def get_parser(self):
