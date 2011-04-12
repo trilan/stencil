@@ -1,11 +1,16 @@
+import os
 from optparse import make_option
 
 
 class Variable(object):
 
-    def __init__(self, name, default=None, help=None, metavar=None, prompt=None):
+    def __init__(self, name, default=None, environ=None, help=None,
+                 metavar=None, prompt=None):
         self.name = name
-        self.default = default
+        if environ:
+            self.default = os.environ.get(environ, default)
+        else:
+            self.default = default
         self.help = help
         self.metavar = metavar
         self.prompt_text = prompt
