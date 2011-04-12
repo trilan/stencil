@@ -1,5 +1,6 @@
 import os
 import optparse
+import sys
 from .resources import Directory, File, Template
 
 
@@ -23,6 +24,11 @@ class Stencil(object):
     def source(self):
         return 'stencils/%s' % self.name
 
+    def location(self):
+        module_path = sys.modules[self.__class__.__module__].__file__
+        location = os.path.join(os.path.dirname(module_path), self.source)
+        return os.path.abspath(location)
+
     def copy(self, destination):
         destination = os.path.abspath(destination)
         for resource in self.resources:
@@ -37,7 +43,7 @@ class Stencil(object):
                 self.context[variable.name] = variable.prompt()
 
     def collect_resources(self):
-        source = os.path.join(os.path.dirname(__file__), self.source)
+        source = self.location()
         if not os.path.isdir(source):
             raise WrongSource('%s is not a directory' % source)
         directories, files, templates = [], [], []
