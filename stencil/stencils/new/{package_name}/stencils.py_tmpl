@@ -1,0 +1,7 @@
+from stencil.base import Stencil
+
+
+class {stencil_name}(Stencil):
+
+    source = 'stencils/{command_name}'
+    help = {description!r}

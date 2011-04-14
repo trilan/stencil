@@ -32,6 +32,7 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: POSIX',
+        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Topic :: Software Development :: Code Generators',
         'Topic :: Software Development :: Libraries :: Python Modules',
@@ -40,6 +41,9 @@ setup(
     entry_points = {
         'console_scripts': [
             'stencil = stencil.main:run',
+        ],
+        'stencils': [
+            'new = stencil.stencils:New',
         ],
     }
 )
