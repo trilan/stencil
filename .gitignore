@@ -1,4 +1,6 @@
+*.egg
 *.egg-info
 *.pyc
 *.pyo
+.tox/
 docs/_build/

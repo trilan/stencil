@@ -23,6 +23,8 @@ setup(
     author_email = 'mike@yumatov.org',
     packages = find_packages(),
     install_requires = requirements,
+    test_suite = 'nose.collector',
+    tests_require = ['nose'],
     classifiers = [
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Console',
