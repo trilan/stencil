@@ -1,0 +1,21 @@
+import os
+from setuptools import setup, find_packages
+
+
+def read(filename):
+    return open(os.path.join(os.path.dirname(__file__), filename)).read()
+
+
+setup(
+    name = {name!r},
+    version = {version!r},
+    description = {description!r},
+    long_description = read('README'),
+    author = {author!r},
+    author_email = {author_email!r},
+    entry_points = {{
+        'stencils': [
+            '{command_name} = {package_name}.stencils:{stencil_name}',
+        ]
+    }}
+)
