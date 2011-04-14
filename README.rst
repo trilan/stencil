@@ -11,11 +11,22 @@ Install Stencil with pip::
 
     $ pip install Stencil
 
+It will also install argparse for python < 2.7. There is no python 3 support yet.
+
 
 Usage example
 -------------
 
-There is currently only one template provided by Stencil. It creates a package
-with new stencil, e.g.::
+To create new file or directory of files and subdirectories from <stencil> use::
 
-    $ stencil new newsuperstencil
+    $ stencil [global args] <stencil> [stencil args]
+
+For example, using stencil ``new`` you can create a new project containing a new
+stencil::
+
+    $ stencil new mystencil
+
+For creating stencils use ``new`` `stencil`_ as example.
+All stencils are collected together using entry points from Distribute.
+
+.. _stencil: https://github.com/trilan/stencil/blob/master/stencil/stencils.py
