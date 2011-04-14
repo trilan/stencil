@@ -1,9 +1,15 @@
 import os
+import sys
 from setuptools import setup, find_packages
 
 
 def read(filename):
     return open(os.path.join(os.path.dirname(__file__), filename)).read()
+
+
+requirements = []
+if sys.version_info < (2, 7):
+    requirements.append('argparse')
 
 
 setup(
@@ -16,6 +22,7 @@ setup(
     author = 'Mike Yumatov',
     author_email = 'mike@yumatov.org',
     packages = find_packages(),
+    install_requires = requirements,
     classifiers = [
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Console',

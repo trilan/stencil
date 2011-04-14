@@ -12,6 +12,7 @@ class Stencil(object):
 
     source = None
     variables = []
+    help = None
 
     def __init__(self):
         self.resources = []
@@ -26,13 +27,13 @@ class Stencil(object):
         for resource in self.resources:
             resource.copy(target, self.context)
 
-    def fill_context(self, options, target, use_defaults=False):
+    def fill_context(self, args):
         for variable in self.variables:
-            value = getattr(options, variable.name, None)
+            value = getattr(args, variable.name, None)
             if value is not None:
                 self.context[variable.name] = value
             elif variable.name not in self.context:
-                if use_defaults and variable.default is not None:
+                if args.use_defaults and variable.default is not None:
                     self.context[variable.name] = variable.default
                 else:
                     self.context[variable.name] = variable.prompt()
@@ -53,19 +54,23 @@ class Stencil(object):
                     files.append(File(source_path, os.path.join(path, filename)))
         self.resources = directories + files + templates
 
-    def get_parser(self):
-        option_list = [variable.as_option() for variable in self.variables]
-        parser = optparse.OptionParser(option_list=option_list)
-        return parser
+    @classmethod
+    def add_to_subparsers(cls, name, subparsers):
+        parser = subparsers.add_parser(name, help=cls.help)
+        for variable in cls.variables:
+            variable.add_to_parser(parser)
+        parser.add_argument('target', type=cls.absolute_path,
+                            help='destination directory')
+        parser.set_defaults(func=cls.run)
 
     @classmethod
-    def run(cls, args, use_defaults=False):
+    def absolute_path(cls, arg):
+        return os.path.abspath(arg)
+
+    @classmethod
+    def run(cls, args):
         stencil = cls()
-        parser = stencil.get_parser()
-        options, args = parser.parse_args(args)
-        if len(args) != 1:
-            parser.error("target isn't specified.")
-        target = os.path.abspath(args[0])
-        stencil.fill_context(options, target, use_defaults)
+        print args.target
+        stencil.fill_context(args)
         stencil.collect_resources()
-        stencil.copy(target)
+        stencil.copy(args.target)

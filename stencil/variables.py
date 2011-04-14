@@ -30,7 +30,7 @@ class Variable(object):
 
 class String(Variable):
 
-    def as_option(self):
-        return make_option('--{0}'.format(self.name.replace('_', '-')),
-                           action='store', type='string', dest=self.name,
-                           help=self.help, metavar=self.metavar)
+    def add_to_parser(self, parser):
+        parser.add_argument('--{0}'.format(self.name.replace('_', '-')),
+                            action='store', dest=self.name,
+                            help=self.help, metavar=self.metavar)

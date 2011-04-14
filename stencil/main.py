@@ -1,5 +1,5 @@
 import sys
-import optparse
+import argparse
 from pkg_resources import iter_entry_points
 
 
@@ -15,23 +15,16 @@ def print_list(option, opt, value, parser):
 
 
 def run():
-    parser = optparse.OptionParser()
-    parser.add_option('-l', '--list', action='callback', callback=print_list,
-                      help='show available stencils and exit')
-    parser.add_option('-d', '--use-defaults', action='store_true',
-                      dest='use_defaults', default=False,
-                      help="don't ask for variables with defaults if set")
-    parser.disable_interspersed_args()
-    options, args = parser.parse_args()
-    if not args:
-        parser.error("stencil wasn't specified.")
-    name = args.pop(0)
-    try:
-        stencil = stencils[name]
-    except KeyError:
-        parser.error("stencil %s wasn't found" % name)
-    stencil.run(args, options.use_defaults)
-
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--use-defaults', dest='use_defaults',
+                        action='store_true', default=False,
+                        help="don't ask for variables with defaults if set")
+    subparsers = parser.add_subparsers(title='available stencils',
+                                       metavar='<stencil>')
+    for name, stencil in stencils.items():
+        stencil.add_to_subparsers(name, subparsers)
+    args = parser.parse_args()
+    args.func(args)
 
 if __name__ == '__main__':
     run()
