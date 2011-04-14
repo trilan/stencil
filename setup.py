@@ -12,7 +12,7 @@ setup(
     license = 'BSD',
     description = 'Creates files and directories from stencils.',
     long_description = read('README.rst'),
-    url = 'https://github.org/trilan/stencil',
+    url = 'https://github.com/trilan/stencil',
     author = 'Mike Yumatov',
     author_email = 'mike@yumatov.org',
     packages = find_packages(),
