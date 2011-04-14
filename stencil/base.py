@@ -70,7 +70,6 @@ class Stencil(object):
     @classmethod
     def run(cls, args):
         stencil = cls()
-        print args.target
         stencil.fill_context(args)
         stencil.collect_resources()
         stencil.copy(args.target)
