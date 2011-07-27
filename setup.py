@@ -10,11 +10,12 @@ def read(filename):
 requirements = []
 if sys.version_info < (2, 7):
     requirements.append('argparse')
+    requirements.append('ordereddict')
 
 
 setup(
     name = 'Stencil',
-    version = '0.1',
+    version = '0.1.1',
     license = 'BSD',
     description = 'Creates files and directories from templates',
     long_description = read('README.rst') + '\n\n' + read('HISTORY.rst'),
