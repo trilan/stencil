@@ -1,6 +1,12 @@
 import os
 import optparse
 import sys
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ordereddict import OrderedDict
+
 from .resources import Directory, File, Template
 
 
@@ -18,10 +24,18 @@ class Stencil(object):
         self.resources = []
         self.context = {}
 
-    def get_absolute_source_path(self):
+    def get_absolute_path(self, source):
         module_path = sys.modules[self.__class__.__module__].__file__
-        source_path = os.path.join(os.path.dirname(module_path), self.source)
+        source_path = os.path.join(os.path.dirname(module_path), source)
         return os.path.abspath(source_path)
+
+    def get_source_list(self):
+        if isinstance(self.source, (list, tuple)):
+            source_list = list(self.source)
+        else:
+            source_list = [self.source]
+        source_list = [self.get_absolute_path(source) for source in source_list]
+        return [path for path in source_list if os.path.isdir(path)]
 
     def copy(self, target):
         for resource in self.resources:
@@ -39,20 +53,25 @@ class Stencil(object):
                     self.context[variable.name] = variable.prompt()
 
     def collect_resources(self):
-        source_path = self.get_absolute_source_path()
-        if not os.path.isdir(source_path):
-            raise WrongSource('%s is not a directory' % source_path)
-        directories, files, templates = [], [], []
-        for path, dirnames, filenames in os.walk(source_path):
-            path = os.path.relpath(path, source_path)
-            directories.append(Directory(source_path, path))
-            for filename in filenames:
-                if filename.endswith('_tmpl'):
-                    template_path = os.path.join(path, filename)
-                    templates.append(Template(source_path, template_path))
-                else:
-                    files.append(File(source_path, os.path.join(path, filename)))
-        self.resources = directories + files + templates
+        source_list = self.get_source_list()
+        if not source_list:
+            raise WrongSource(
+                'None of the source directories exists: %r' % source_path)
+        directories, files = OrderedDict(), OrderedDict()
+        for source in source_list:
+            for root, _, filenames in os.walk(source):
+                root = os.path.relpath(root, source)
+                directories[root] = source
+                for filename in filenames:
+                    files[os.path.join(root, filename)] = source
+        self.resources = []
+        for path, source in directories.items():
+            self.resources.append(Directory(source, path))
+        for path, source in files.items():
+            if path.endswith('_tmpl'):
+                self.resources.append(Template(source, path))
+            else:
+                self.resources.append(File(source, path))
 
     @classmethod
     def add_to_subparsers(cls, name, subparsers):

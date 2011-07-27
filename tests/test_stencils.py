@@ -12,4 +12,6 @@ class Package(Stencil):
 
 
 def test_stencil_absolute_source_path():
-    eq_(Package().get_absolute_source_path(), os.path.join(sources, 'package'))
+    package = Package()
+    absolute_path = package.get_absolute_path(package.source)
+    eq_(absolute_path, os.path.join(sources, 'package'))
