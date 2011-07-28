@@ -21,7 +21,7 @@ class Stencil(object):
     help = None
 
     def __init__(self):
-        self.resources = []
+        self.resources = {}
         self.context = {}
 
     def get_absolute_path(self, source):
@@ -38,8 +38,9 @@ class Stencil(object):
         return [path for path in source_list if os.path.isdir(path)]
 
     def copy(self, target):
-        for resource in self.resources:
-            resource.copy(target, self.context)
+        os.makedirs(target, 0755)
+        for path in sorted(self.resources):
+            self.resources[path].copy(os.path.join(target, path), self.context)
 
     def fill_context(self, args):
         for variable in self.variables:
@@ -57,21 +58,24 @@ class Stencil(object):
         if not source_list:
             raise WrongSource(
                 'None of the source directories exists: %r' % source_path)
-        directories, files = OrderedDict(), OrderedDict()
+        resources = {}
         for source in source_list:
-            for root, _, filenames in os.walk(source):
+            for root, dirnames, filenames in os.walk(source):
                 root = os.path.relpath(root, source)
-                directories[root] = source
+                for dirname in dirnames:
+                    path = os.path.normpath(os.path.join(root, dirname))
+                    real_path = os.path.join(source, path)
+                    resources[path % self.context] = Directory(real_path)
                 for filename in filenames:
-                    files[os.path.join(root, filename)] = source
-        self.resources = []
-        for path, source in directories.items():
-            self.resources.append(Directory(source, path))
-        for path, source in files.items():
-            if path.endswith('_tmpl'):
-                self.resources.append(Template(source, path))
-            else:
-                self.resources.append(File(source, path))
+                    path = os.path.normpath(os.path.join(root, filename))
+                    real_path = os.path.join(source, path)
+                    if path.endswith('_tmpl'):
+                        path = path[:-5]
+                        Resource = Template
+                    else:
+                        Resource = File
+                    resources[path % self.context] = Resource(real_path)
+        self.resources = resources
 
     @classmethod
     def add_to_subparsers(cls, name, subparsers):
