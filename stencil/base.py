@@ -66,7 +66,7 @@ class Stencil(object):
                 for dirname in dirnames:
                     path = os.path.normpath(os.path.join(root, dirname))
                     real_path = os.path.join(source, path)
-                    resources[path % self.context] = Directory(real_path)
+                    resources[path] = Directory(real_path)
                 for filename in filenames:
                     path = os.path.normpath(os.path.join(root, filename))
                     real_path = os.path.join(source, path)
@@ -75,7 +75,7 @@ class Stencil(object):
                         Resource = Template
                     else:
                         Resource = File
-                    resources[path % self.context] = Resource(real_path)
+                    resources[path] = Resource(real_path)
         self.resources = resources
 
     @classmethod
