@@ -1,3 +1,4 @@
+import jinja2
 import os
 from shutil import copyfile
 
@@ -31,8 +32,21 @@ class File(Resource):
 
 class Template(Resource):
 
-    def copy(self, target, context):
+    def repr(self, value):
+        return repr(value)
+
+    def get_environment(self):
+        env = jinja2.Environment()
+        env.filters['repr'] = self.repr
+        return env
+
+    def get_template(self):
         with open(self.path) as f:
-            content = f.read()
+            return self.get_environment().from_string(f.read())
+
+    def render(self, context):
+        return self.get_template().render(context)
+
+    def copy(self, target, context):
         with open(target, 'w') as f:
-            f.write(content.format(**context))
+            f.write(self.render(context))

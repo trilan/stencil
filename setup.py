@@ -7,7 +7,7 @@ def read(filename):
     return open(os.path.join(os.path.dirname(__file__), filename)).read()
 
 
-requirements = []
+requirements = ['Jinja2']
 if sys.version_info < (2, 7):
     requirements.append('argparse')
     requirements.append('ordereddict')
