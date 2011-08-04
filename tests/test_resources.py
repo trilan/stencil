@@ -41,4 +41,4 @@ def test_template_copy():
     template.copy(os.path.join(target, 'template.txt'), {'foo': 'bar'})
     ok_(os.path.exists(os.path.join(target, 'template.txt')))
     with open(os.path.join(target, 'template.txt')) as f:
-        eq_(f.read(), 'bar\n')
+        eq_(f.read(), 'bar')
