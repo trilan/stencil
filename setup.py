@@ -15,7 +15,7 @@ if sys.version_info < (2, 7):
 
 setup(
     name = 'Stencil',
-    version = '0.2.dev',
+    version = '0.2',
     license = 'BSD',
     description = 'Creates files and directories from templates',
     long_description = read('README.rst') + '\n\n' + read('HISTORY.rst'),
