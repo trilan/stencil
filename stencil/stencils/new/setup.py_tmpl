@@ -7,15 +7,15 @@ def read(filename):
 
 
 setup(
-    name = {name!r},
-    version = {version!r},
-    description = {description!r},
+    name = {{ name|repr }},
+    version = {{ version|repr }},
+    description = {{ description|repr }},
     long_description = read('README'),
-    author = {author!r},
-    author_email = {author_email!r},
-    entry_points = {{
+    author = {{ author|repr }},
+    author_email = {{ author_email|repr }},
+    entry_points = {
         'stencils': [
-            '{command_name} = {package_name}.stencils:{stencil_name}',
+            '{{ command_name }} = {{ package_name }}.stencils:{{ stencil_name }}',
         ]
-    }}
+    }
 )

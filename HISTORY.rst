@@ -1,6 +1,12 @@
 History
 -------
 
+0.2 (2011-08-05)
+^^^^^^^^^^^^^^^^
+
+* Overridable resources
+* Use Jinja2 for templates
+
 0.1.2 (2011-08-05)
 ^^^^^^^^^^^^^^^^^^
 
