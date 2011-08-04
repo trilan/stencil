@@ -4,6 +4,7 @@ History
 next release
 ^^^^^^^^^^^^
 
+* Overridable resources
 * Use Jinja2 for templates
 
 0.1.2 (2011-08-05)

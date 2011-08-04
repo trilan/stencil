@@ -24,6 +24,15 @@ class Stencil(object):
         self.resources = {}
         self.context = {}
 
+    def get_file(self, path):
+        return File(path)
+
+    def get_directory(self, path):
+        return Directory(path)
+
+    def get_template(self, path):
+        return Template(path)
+
     def get_absolute_path(self, source):
         module_path = sys.modules[self.__class__.__module__].__file__
         source_path = os.path.join(os.path.dirname(module_path), source)
@@ -66,16 +75,16 @@ class Stencil(object):
                 for dirname in dirnames:
                     path = os.path.normpath(os.path.join(root, dirname))
                     real_path = os.path.join(source, path)
-                    resources[path] = Directory(real_path)
+                    resources[path] = self.get_directory(real_path)
                 for filename in filenames:
                     path = os.path.normpath(os.path.join(root, filename))
                     real_path = os.path.join(source, path)
                     if path.endswith('_tmpl'):
                         path = path[:-5]
-                        Resource = Template
+                        get_resource = self.get_template
                     else:
-                        Resource = File
-                    resources[path] = Resource(real_path)
+                        get_resource = self.get_file
+                    resources[path] = get_resource(real_path)
         self.resources = resources
 
     @classmethod
