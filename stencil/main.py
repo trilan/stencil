@@ -21,8 +21,8 @@ def run():
                         help="don't ask for variables with defaults if set")
     subparsers = parser.add_subparsers(title='available stencils',
                                        metavar='<stencil>')
-    for name, stencil in stencils.items():
-        stencil.add_to_subparsers(name, subparsers)
+    for name in sorted(stencils):
+        stencils[name].add_to_subparsers(name, subparsers)
     args = parser.parse_args()
     args.func(args)
 
