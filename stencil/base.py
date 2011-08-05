@@ -7,6 +7,7 @@ try:
 except ImportError:
     from ordereddict import OrderedDict
 
+from .utils import abort
 from .resources import Directory, File, Template
 
 
@@ -46,8 +47,21 @@ class Stencil(object):
         source_list = [self.get_absolute_path(source) for source in source_list]
         return [path for path in source_list if os.path.isdir(path)]
 
+    def make_target_dir(self, target):
+        try:
+            os.makedirs(target, 0755)
+        except OSError:
+            if not os.path.exists(target):
+                abort('can not create directory %s' % target)
+            if not os.path.isdir(target):
+                abort('target %s exists and is not a directory' % target)
+            if not os.access(target, os.R_OK | os.W_OK | os.X_OK):
+                abort('directory %s has not enough permissions' % target)
+            if os.listdir(target):
+                abort('directory %s is not empty' % target)
+
     def copy(self, target):
-        os.makedirs(target, 0755)
+        self.make_target_dir(target)
         for path in sorted(self.resources):
             real_path = os.path.join(target, path.format(**self.context))
             self.resources[path].copy(real_path, self.context)

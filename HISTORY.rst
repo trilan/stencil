@@ -4,6 +4,7 @@ History
 next release
 ^^^^^^^^^^^^
 
+* Better handling of target directory creation
 * Fix stencils order in command output
 
 0.2 (2011-08-05)
