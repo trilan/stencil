@@ -1,8 +1,8 @@
 History
 -------
 
-next release
-^^^^^^^^^^^^
+0.2.1 (2011-08-10)
+^^^^^^^^^^^^^^^^^^
 
 * Better handling of target directory creation
 * Fix stencils order in command output
