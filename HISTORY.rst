@@ -1,6 +1,11 @@
 History
 -------
 
+next release
+^^^^^^^^^^^^
+
+* Output created resources to console using clint
+
 0.2.1 (2011-08-10)
 ^^^^^^^^^^^^^^^^^^
 

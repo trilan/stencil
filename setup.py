@@ -7,7 +7,7 @@ def read(filename):
     return open(os.path.join(os.path.dirname(__file__), filename)).read()
 
 
-requirements = ['Jinja2']
+requirements = ['clint', 'Jinja2']
 if sys.version_info < (2, 7):
     requirements.append('argparse')
     requirements.append('ordereddict')
@@ -15,7 +15,7 @@ if sys.version_info < (2, 7):
 
 setup(
     name = 'Stencil',
-    version = '0.2.1',
+    version = '0.3.dev',
     license = 'BSD',
     description = 'Creates files and directories from templates',
     long_description = read('README.rst') + '\n\n' + read('HISTORY.rst'),

@@ -7,6 +7,9 @@ try:
 except ImportError:
     from ordereddict import OrderedDict
 
+from clint.textui import colored
+from clint.textui import puts
+
 from .utils import abort
 from .resources import Directory, File, Template
 
@@ -63,6 +66,7 @@ class Stencil(object):
     def copy(self, target):
         self.make_target_dir(target)
         for path in sorted(self.resources):
+            puts('    %s %s' % (colored.green('create'), path))
             real_path = os.path.join(target, path.format(**self.context))
             self.resources[path].copy(real_path, self.context)
 
