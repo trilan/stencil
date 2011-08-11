@@ -66,8 +66,9 @@ class Stencil(object):
     def copy(self, target):
         self.make_target_dir(target)
         for path in sorted(self.resources):
-            puts('    %s %s' % (colored.green('create'), path))
-            real_path = os.path.join(target, path.format(**self.context))
+            formatted_path = path.format(**self.context)
+            real_path = os.path.join(target, formatted_path)
+            puts('    %s %s' % (colored.green('create'), formatted_path))
             self.resources[path].copy(real_path, self.context)
 
     def fill_context(self, args):
